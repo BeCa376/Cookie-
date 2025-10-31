@@ -3,8 +3,8 @@
 const express = require("express");
 
 // Importa as rotas do recurso 'livros'
-const Livros = require("./routers/livros.js");
-const Usuarios = require("./routers/usuarios.js");
+const livroRoutes = require("./routes/livroRoutes.js");
+const usuarioRoutes = require("./routes/usuarioRoutes.js");
 
 // Porta onde o servidor vai escutar (8000 para backend)
 const port = 8000;
@@ -15,11 +15,15 @@ const app = express();
 // Middleware: habilita parsing de JSON no corpo das requisições
 app.use(express.json());
 
-// Registra as rotas: todas as rotas em routers
-app.use("/livros", Livros);
-app.use("/usuarios", Usuarios);
+// Registra as rotas: todas as rotas em routes
+app.use("/livros", livroRoutes);
+app.use("/usuarios", usuarioRoutes);
+
+app.get('/', (req, res) => {
+  res.send('API Catálogo de livros funcionando!');
+});
 
 // Inicia o servidor
 app.listen(port, () => {
-  console.log(`escutando a porta ${port}`);
+  console.log(`escutando na porta ${port}`);
 });
