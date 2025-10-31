@@ -1,75 +1,85 @@
-const {
-  getTodosLivros,
-  getLivroForID,
-  postNovoLivro,
-  putLivroAtualizado,
-  deleteID,
-} = require("../services/livros");
+// Array para simular uma base de dados de livros
+let livros = [
+    { id: 1, titulo: 'O Senhor dos Anéis', autor: 'J.R.R. Tolkien', genero: 'Fantasia', ano_publicacao: 1954 },
+    { id: 2, titulo: '1984', autor: 'George Orwell', genero: 'Distopia', ano_publicacao: 1949 },
+    { id: 3, titulo: 'O Guia do Mochileiro das Galáxias', autor: 'Douglas Adams', genero: 'Ficção Científica', ano_publicacao: 1979 },
+];
 
-// Controlador: retorna a lista completa de livros.
-// Rota: GET /livros
-function getLivros(req, res) {
-  try {
-    const livros = getTodosLivros();
-    res.status(200).send(livros);
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
+let nextId = 4;
+
+exports.listarTodos = (req, res) => {   
+    res.json(livros);
 }
 
-// Controlador: retorna um único livro identificado por ID.
-// Rota: GET /livros/:id
-function getLivro(req, res) {
-  try {
-    const id = req.params.id;
-    const livro = getLivroForID(id);
-    res.status(200).send(livro);
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
+exports.buscarporId = (req, res) => {
+    // Converte o ID da rota (que é string) para número
+    const idLivro = parseInt(req.params.id);
+    // Encontra o livro no array
+    const livroEncontrado = livros.find(l => l.id === idLivro);
+
+    if (livroEncontrado) {
+        res.json(livroEncontrado);
+    } else {
+        // Se não encontrar, retorna erro 404
+        res.status(404).json({ message: 'Livro não encontrado.' });
+    }
 }
 
-// Controlador: cria um novo livro com base no body da requisição.
-// Rota: POST /livros
-function postLivro(req, res) {
-  try {
-    const livroNovo = req.body;
-    postNovoLivro(livroNovo);
-    res.status(201).send("Livro adicionado com sucesso");
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
+exports.criar = (req, res) => {
+    // Pega os dados do corpo da requisição
+    const { titulo, autor, genero, ano_publicacao } = req.body;
+  
+    // Validação simples
+    if (!titulo || !autor || !genero || !ano_publicacao) {
+      return res.status(400).json({ message: 'Todos os campos (titulo, autor, genero, ano_publicacao) são obrigatórios.' });
+    }
+
+    // Cria o novo objeto livro
+    const novoLivro = {
+        id: nextId++, 
+        titulo, 
+        autor, 
+        genero, 
+        ano_publicacao
+    };
+
+    livros.push(novoLivro);
+    res.status(201).json(novoLivro);
 }
 
-// Controlador: atualiza um livro existente por ID usando o body da requisição.
-// Rota: PUT /livros/:id
-function putLivro(req, res) {
-  try {
-    const id = req.params.id;
-    const body = req.body;
-    putLivroAtualizado(body, id);
-    res.status(200).send("Livro atualizado com sucesso");
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-}
+exports.atualizar = (req, res) => {
+    const id = parseInt(req.params.id);
+    const livroIndex = livros.findIndex(l => l.id === id);
+  
+    if (livroIndex === -1) {
+        return res.status(404).json({ message: 'Livro não encontrado.' });
+    }
 
-// Controlador: remove um livro por ID.
-// Rota: DELETE /livros/:id
-// Observação: aqui a função chama o service `deleteID` e retorna 200.
-function deleteLivro(req, res) {
-  try {
-    const id = deleteID(req.params.id);
-    res.status(200).send(`Livro com ID ${id} deletado com sucesso`);
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-}
+    const { titulo, autor, genero, ano_publicacao } = req.body;
+    const livroAtual = livros[livroIndex];
 
-module.exports = {
-  getLivros,
-  getLivro,
-  postLivro,
-  putLivro,
-  deleteLivro
+    livros[livroIndex] = {
+        ...livroAtual,
+        titulo: titulo !== undefined ? titulo : livroAtual.titulo,
+        autor: autor !== undefined ? autor : livroAtual.autor,
+        genero: genero !== undefined ? genero : livroAtual.genero,
+        ano_publicacao: ano_publicacao !== undefined ? ano_publicacao : livroAtual.ano_publicacao
+    };
+    
+    res.json(livros[livroIndex]);
+};
+
+
+exports.deletar = (req, res) => {
+    const id = parseInt(req.params.id);
+    const initialLength = livros.length;
+    
+    livros = livros.filter(l => l.id !== id);
+
+    if (livros.length < initialLength) {
+        
+        res.status(200).json({ message: 'Livro removido com sucesso' });
+    } else {
+        res.status(404).json({ message: 'Livro não encontrado.' });
+    }
 };

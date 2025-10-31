@@ -1,27 +1,29 @@
-const { Router } = require("express");
-const {
-  getLivros,
-  getLivro,
-  postLivro,
-  putLivro,
-  deleteLivro,
-} = require("../controllers/livros");
+const express = require('express');
+const router = express.Router();
+const livroController = require('../controllers/livroController');
 
-const router = Router();
+// Importamos os DOIS middlewares
+const { verificaToken, verificaAdmin } = require('../middlewares/authMiddleware');
 
-// Solicitar todos os livros (GET /livros)
-router.get("/", getLivros);
+// === Rotas Públicas (Qualquer um pode ver) ===
 
-// Solicitar um livro por ID (GET /livros/:id)
-router.get("/:id", getLivro);
+// Rota GET para obter todos os livros
+router.get('/', livroController.listarTodos);
 
-// Adicionar um novo livro (POST /livros)
-router.post("/", postLivro);
+// Rota GET para obter um livro por ID
+router.get('/:id', livroController.buscarporId);
 
-// Atualizar um livro existente (PUT /livros/:id)
-router.put("/:id", putLivro);
 
-// Deletar um livro (DELETE /livros/:id)
-router.delete("/:id", deleteLivro);
+// === Rotas Protegidas (Requerem login e permissão de admin) ===
+
+// Rota POST para criar um novo livro
+// 1º verifica o token, 2º verifica se é admin
+router.post('/', verificaToken, verificaAdmin, livroController.criar);
+
+// Rota PUT para atualizar um livro
+router.put('/:id', verificaToken, verificaAdmin, livroController.atualizar);
+
+// Rota DELETE para deletar um livro
+router.delete('/:id', verificaToken, verificaAdmin, livroController.deletar);
 
 module.exports = router;
