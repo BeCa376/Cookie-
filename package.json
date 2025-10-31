@@ -1,17 +1,19 @@
 {
   "name": "projetobooksserver",
   "version": "1.0.0",
-  "description": "",
+  "description": "API desenvilvida com node de catalogo de livros",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./src/app.js"
   },
+  "keywords": [],
   "author": "Gustavo Souza",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "nodemon": "^3.1.10"
+    "jsonwebtoken": "^9.0.2"
   }
 }
