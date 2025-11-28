@@ -1,18 +1,19 @@
 {
   "name": "projetobooksserver",
   "version": "1.0.0",
-  "description": "API desenvilvida com node de catalogo de livros",
-  "main": "server.js",
+  "description": "API desenvolvida com Node para catálogo de livros",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest",
-    "start": "node ./src/server.js",
-    "dev": "nodemon ./src/server.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
-  "author": "Gustavo Souza",
+  "author": "Camila Fideli",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

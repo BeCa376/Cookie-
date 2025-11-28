@@ -1,45 +1,34 @@
 const express = require("express");
+const cors = require("cors");
+const sequelize = require("./database");
 
-const livroRoutes = require("./routes/livroRoutes.js");
-const usuarioRoutes = require("./routes/usuarioRoutes.js");
-
-const port = 8000;
+// Rotas
+const livroRoutes = require("./routes/livroRoutes");
+const usuarioRoutes = require("./routes/usuarioRoutes");
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
+// Sincronizar banco apenas uma vez
 async function syncDatabase() {
     try {
         await sequelize.sync();
-        console.log('Modelos sincronizados com o banco de dados.');
+        console.log("Modelos sincronizados com o banco de dados.");
     } catch (error) {
-        console.error('Erro ao sincronizar modelos:', error);
+        console.error("Erro ao sincronizar modelos:", error);
     }
 }
 syncDatabase();
 
-
+// Rotas principais
 app.use("/api/livros", livroRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 
-app.get('/', (req, res) => {
-  res.send('API Catálogo de livros funcionando!');
+// Rota inicial
+app.get("/", (req, res) => {
+    res.send("API Catálogo de Livros funcionando!");
 });
 
-app.listen(port, () => {
-  module.exports = app;
-});
-
-const sequelize = require('./database'); // Importa a conexão
-const Produto = require('./models/produto'); // Importa o modelo
-async function syncDatabase() {
-    try {
-        // .sync() verifica o estado dos modelos e os cria/altera no BD se necessário
-        await sequelize.sync();
-        console.log('Modelos sincronizados com o banco de dados.');
-    } catch (error) {
-        console.error('Erro ao sincronizar modelos:', error);
-    }
-}
-syncDatabase();
+module.exports = app;
