@@ -2,6 +2,8 @@ const express = require("express");
 
 const livroRoutes = require("./routes/livroRoutes.js");
 const usuarioRoutes = require("./routes/usuarioRoutes.js");
+const sequelize = require('../database');
+const Livro = require('./Models/livro');
 
 const port = 8000;
 
@@ -31,11 +33,10 @@ app.listen(port, () => {
   module.exports = app;
 });
 
-const sequelize = require('./database'); // Importa a conexão
-const Produto = require('./models/produto'); // Importa o modelo
+
 async function syncDatabase() {
     try {
-        // .sync() verifica o estado dos modelos e os cria/altera no BD se necessário
+        
         await sequelize.sync();
         console.log('Modelos sincronizados com o banco de dados.');
     } catch (error) {
@@ -43,3 +44,5 @@ async function syncDatabase() {
     }
 }
 syncDatabase();
+
+module.exports = app;

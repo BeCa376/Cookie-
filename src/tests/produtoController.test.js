@@ -1,17 +1,17 @@
-const produtoController = require('../controllers/produtoController');
-const Produto = require('../models/produto'); // Importamos o Model real
-jest.mock('../models/produto');
+const livroController = require('../controllers/livroController');
+const Livro = require('./models/livro'); // Importamos o Model real
+jest.mock('../models/livro');
 
-// Suíte de Testes para o Controlador de Produtos
-describe('ProdutoController - Testes Unitários', () => {
+// Suíte de Testes para o Controlador de Livros
+describe('LivroController - Testes Unitários', () => {
 
     // Limpa os mocks após cada teste para evitar "vazamento"
     afterEach(() => {
         jest.clearAllMocks();
     });
 
-    // Teste para o método getAllProdutos
-    it('deve retornar todos os produtos e status 200 (getAllProdutos)', async () => {
+    // Teste para o método getAllLivros
+    it('deve retornar todos os livros e status 200 (getAllLivros)', async () => {
 
         // --- 1. Arrange (Arrumar) ---
 
@@ -22,8 +22,8 @@ describe('ProdutoController - Testes Unitários', () => {
         ];
 
         // Dizemos ao Model mockado: "Quando a função findAll for chamada,
-        // resolva a Promise com 'mockProdutos'"
-        Produto.findAll.mockResolvedValue(mockLivros);
+        // resolva a Promise com 'mockLivros'"
+        Livro.findAll.mockResolvedValue(mockLivros);
 
         // Criamos mocks para os objetos 'req' e 'res'
         const req = {};
@@ -34,29 +34,29 @@ describe('ProdutoController - Testes Unitários', () => {
 
         // --- 2. Act (Agir) ---
         // Chamamos a função real do controlador com os mocks
-        await produtoController.getAllLivros(req, res);
+        await livroController.getAllLivros(req, res);
 
         // --- 3. Assert (Verificar) ---
         // Verificamos se o Model foi chamado corretamente
-        expect(Produto.findAll).toHaveBeenCalledTimes(1);
+        expect(Livro.findAll).toHaveBeenCalledTimes(1);
         // Verificamos se a resposta foi enviada corretamente
         expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith(mockProdutos);
+        expect(res.json).toHaveBeenCalledWith(mockLivros);
     });
 
-    // Teste para o método createProduto
-    it('deve criar um produto e retornar status 201 (createProduto)', async () => {
+    // Teste para o método createLivro
+    it('deve criar um livro e retornar status 201 (createLivro)', async () => {
 
         // --- 1. Arrange ---
-        const novoProdutoMock = { nome: 'Produto Novo', preco: 50 };
-        const produtoCriadoMock = { id: 3, ...novoProdutoMock };
+        const novoLivroMock = { nome: 'Livro Novo', preco: 50 };
+        const livroCriadoMock = { id: 3, ...novoLivroMock };
 
-        // Dizemos ao Model mockado para retornar o produto criado
-        Produto.create.mockResolvedValue(produtoCriadoMock);
+        // Dizemos ao Model mockado para retornar o livro criado
+        Livro.create.mockResolvedValue(livroCriadoMock);
 
         // Criamos um mock de 'req' com os dados do body
         const req = {
-            body: novoProdutoMock
+            body: novoLivroMock
         };
         const res = {
             status: jest.fn().mockReturnThis(),
@@ -64,13 +64,13 @@ describe('ProdutoController - Testes Unitários', () => {
         };
 
         // --- 2. Act ---
-        await produtoController.createProduto(req, res);
+        await livroController.createLivro(req, res);
 
         // --- 3. Assert ---
         // Verificamos se o Model foi chamado com os dados corretos
-        expect(Produto.create).toHaveBeenCalledWith(novoProdutoMock);
+        expect(Livro.create).toHaveBeenCalledWith(novoLivroMock);
         // Verificamos a resposta
         expect(res.status).toHaveBeenCalledWith(201);
-        expect(res.json).toHaveBeenCalledWith(produtoCriadoMock);
+        expect(res.json).toHaveBeenCalledWith(livroCriadoMock);
     })
 });

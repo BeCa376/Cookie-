@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const db = require('../database.js');
+const db = require('../../database.js');
 
 const livroModel = {
 
@@ -66,8 +66,8 @@ const livroModel = {
 
 module.exports = livroModel;
 
-// Define o Modelo 'Produto'
-const livro = sequelize.define('livro', {
+
+const livro = db.define('livro', {
     
     id: {
         type: DataTypes.INTEGER,
@@ -76,7 +76,7 @@ const livro = sequelize.define('livro', {
     },
     nome: {
         type: DataTypes.STRING,
-        allowNull: false // Garante que este campo não pode ser nulo
+        allowNull: false 
     },
     preco: {
         type: DataTypes.REAL,
@@ -84,13 +84,9 @@ const livro = sequelize.define('livro', {
     }
 },
 {
-    // Opções do Modelo
 
-    // 1. Mapeia para o nome da tabela 'produtos'
     tableName: 'livros',
 
-    // 2. Desabilita os campos 'createdAt' e 'updatedAt' que o Sequelize
-    // adiciona por padrão, pois não tem na tabela.
     timestamps: false
 });
 
