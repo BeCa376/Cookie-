@@ -1,11 +1,9 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// Importe o Model do Usuário (certifique-se que o arquivo existe em Models/usuario.js)
 const Usuario = require('../Models/usuario'); 
 
 const JWT_SECRET = 'sua_chave_secreta_aqui'; 
 
-// CADASTRAR USUÁRIO (Agora usando async/await e Banco de Dados)
 exports.criarUsuario = async (req, res) => {
     try {
         const { nome, email, senha, role } = req.body;
@@ -67,7 +65,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign(
             tokenPayload,
             JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '2m' }
         );
 
         res.status(200).json({ 

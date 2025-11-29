@@ -1,27 +1,26 @@
 const express = require("express");
-
 const livroRoutes = require("./routes/livroRoutes.js");
 const usuarioRoutes = require("./routes/usuarioRoutes.js");
-const sequelize = require('../database');
-const Livro = require('./Models/livro');
+
+const sequelize = require('../database'); 
 
 const port = 8000;
-
 const app = express();
 
 app.use(express.json());
 
 async function syncDatabase() {
     try {
-        await sequelize.sync();
-        console.log('Modelos sincronizados com o banco de dados.');
+        await sequelize.sync({ alter: true });
+        console.log('Banco de dados sincronizado com sucesso (Tabelas Criadas/Atualizadas).');
     } catch (error) {
-        console.error('Erro ao sincronizar modelos:', error);
+        console.error('Erro ao sincronizar o banco de dados:', error);
     }
 }
+
 syncDatabase();
 
-
+// Rotas
 app.use("/api/livros", livroRoutes);
 app.use("/api/usuarios", usuarioRoutes);
 
@@ -29,20 +28,9 @@ app.get('/', (req, res) => {
   res.send('API Catálogo de livros funcionando!');
 });
 
+// Inicia o servidor
 app.listen(port, () => {
-  module.exports = app;
+  console.log(`Servidor rodando na porta ${port}`);
 });
-
-
-async function syncDatabase() {
-    try {
-        
-        await sequelize.sync();
-        console.log('Modelos sincronizados com o banco de dados.');
-    } catch (error) {
-        console.error('Erro ao sincronizar modelos:', error);
-    }
-}
-syncDatabase();
 
 module.exports = app;
