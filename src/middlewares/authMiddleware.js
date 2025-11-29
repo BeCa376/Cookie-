@@ -1,10 +1,18 @@
 const jwt = require('jsonwebtoken');
+<<<<<<< HEAD
 const JWT_SECRET = 'sua_chave_secreta_aqui'; // Em produção, use uma variável de ambiente
+=======
+const JWT_SECRET = 'sua_chave_secreta_aqui'; 
+>>>>>>> origin/Madu_Becher
 
 
 exports.verificaToken = (req, res, next) => { 
     const authHeader = req.headers['authorization'];
+<<<<<<< HEAD
     const token = authHeader && authHeader.split(' ')[1]; // Formato "Bearer TOKEN"
+=======
+    const token = authHeader && authHeader.split(' ')[1];
+>>>>>>> origin/Madu_Becher
 
     if (!token) {
         return res.status(401).json({ message: 'Token não fornecido.' });
@@ -12,8 +20,13 @@ exports.verificaToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, JWT_SECRET);
+<<<<<<< HEAD
         req.usuario = decoded; // Salva os dados do usuário na requisição
         next(); // Continua para a próxima função (controlador ou outro middleware)
+=======
+        req.usuario = decoded;
+        next();
+>>>>>>> origin/Madu_Becher
     } catch (error) { 
         res.status(403).json({ message: 'Token inválido.' });
     }
